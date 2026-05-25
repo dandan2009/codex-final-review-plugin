@@ -2,7 +2,7 @@
   "mcpServers": {
     "final-review": {
       "command": "python3",
-      "args": ["./scripts/final_review_mcp.py"],
+      "args": ["./scripts/run_mcp.py"],
       "cwd": "."
     }
   }

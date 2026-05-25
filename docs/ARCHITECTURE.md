@@ -6,6 +6,7 @@
 Plugin
   .codex-plugin/plugin.json
   .mcp.json
+  scripts/run_mcp.py
   scripts/final_review_mcp.py
   skills/final-review/SKILL.md
 ```
@@ -38,7 +39,9 @@ The skill is intentionally explicit because the workflow is high stakes: it can 
 
 ## MCP Layer
 
-`scripts/final_review_mcp.py` is a local stdio MCP server. It exposes:
+`scripts/run_mcp.py` is the entrypoint configured in `.mcp.json`. It starts the server with the plugin-local `.venv` when available.
+
+`scripts/final_review_mcp.py` is the local stdio MCP server. It exposes:
 
 ```text
 final_review_collect(scope, identifier?, cwd?)
@@ -64,4 +67,3 @@ The skill is procedural and good at controlling the review:
 - What final report to produce
 
 Codex uses both: MCP for evidence collection, skill for workflow and reasoning.
-

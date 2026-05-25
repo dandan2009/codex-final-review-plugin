@@ -9,37 +9,27 @@ git clone https://github.com/dandan2009/codex-final-review-plugin.git
 cd codex-final-review-plugin
 ```
 
-## 2. Install Python Dependency
+## 2. Install
 
-The local MCP server uses the Python `mcp` package:
-
-```bash
-python3 -m pip install mcp
-```
-
-If your Codex environment already provides `mcp`, this command may be unnecessary.
-
-## 3. Run Installer
+Run:
 
 ```bash
 python3 install.py
 ```
 
-By default, the installer creates:
+The installer creates `~/plugins/final-review`, creates a plugin-local `.venv`, installs `requirements.txt`, and updates `~/.agents/plugins/marketplace.json`.
 
-```text
-~/plugins/final-review -> /path/to/codex-final-review-plugin
-```
-
-and updates:
-
-```text
-~/.agents/plugins/marketplace.json
-```
-
-## 4. Restart Codex
+## 3. Restart Codex
 
 Restart Codex so it reloads local plugins and MCP servers.
+
+## Manual Dependency Install
+
+If you run the installer with `--no-deps`, install the MCP dependency yourself:
+
+```bash
+python3 -m pip install mcp
+```
 
 ## Install Options
 
@@ -55,6 +45,20 @@ Replace an existing `~/plugins/final-review`:
 python3 install.py --force
 ```
 
+Skip dependency installation:
+
+```bash
+python3 install.py --no-deps
+```
+
+Use a specific Python interpreter for the plugin `.venv`:
+
+```bash
+python3 install.py --python /path/to/python3
+```
+
+The installer requires Python 3.10 or newer for the MCP dependency. If your system `python3` is older, it will try `python3.13`, `python3.12`, `python3.11`, and `python3.10` before failing with a clear message.
+
 Install to a custom marketplace path:
 
 ```bash
@@ -66,7 +70,7 @@ python3 install.py --marketplace ~/.agents/plugins/marketplace.json
 In a Codex session, try:
 
 ```text
-$final-review 未提交的代码
+$final-review uncommitted
 ```
 
 If the plugin is loaded correctly, Codex should use the final-review workflow. If independent subagents need permission, Codex will ask one short permission question before review.
@@ -76,7 +80,7 @@ If the plugin is loaded correctly, Codex should use the final-review workflow. I
 If Codex cannot start the MCP server, check Python can import `mcp`:
 
 ```bash
-python3 - <<'PY'
+~/plugins/final-review/.venv/bin/python - <<'PY'
 from mcp.server.fastmcp import FastMCP
 print("mcp ok")
 PY
@@ -93,4 +97,3 @@ If MR review fails, check GitLab CLI auth:
 ```bash
 glab auth status
 ```
-

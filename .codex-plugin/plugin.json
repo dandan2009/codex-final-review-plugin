@@ -1,23 +1,35 @@
 {
   "name": "final-review",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Final multi-pass code review workflow for uncommitted, staged, MR, and PR changes.",
   "author": {
-    "name": "Shan"
+    "name": "Shan",
+    "url": "https://github.com/dandan2009"
   },
+  "homepage": "https://github.com/dandan2009/codex-final-review-plugin",
+  "repository": "https://github.com/dandan2009/codex-final-review-plugin",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "code-review",
+    "mcp",
+    "plugin",
+    "pull-request"
+  ],
   "mcpServers": "./.mcp.json",
   "skills": "./skills/",
   "interface": {
     "displayName": "Final Review",
     "shortDescription": "Final review for uncommitted, staged, MR/PR",
-    "longDescription": "Final Review packages the final-review workflow as a local Codex plugin. It resolves the requested diff, runs two review perspectives, validates findings, fixes true issues, reruns checks, performs impact review, and reports remaining risk. When independent subagent authorization is missing, Codex asks once before review; otherwise the workflow falls back to local two-pass review and reports that downgrade.",
+    "longDescription": "Final Review packages a final code-review workflow as a local Codex plugin. It resolves uncommitted, staged, PR, and MR diffs, runs two review perspectives, validates findings, fixes true issues, reruns checks, performs impact review, and reports remaining risk. When independent subagent authorization is missing, Codex asks once before review; otherwise the workflow falls back to local two-pass review and reports that downgrade.",
     "developerName": "Shan",
     "category": "Productivity",
     "capabilities": ["Review", "Interactive", "Write"],
+    "websiteURL": "https://github.com/dandan2009/codex-final-review-plugin",
     "defaultPrompt": [
-      "$final-review 未提交的代码",
-      "$final-review 暂存的代码",
-      "$final-review 这个mr xxx"
+      "$final-review uncommitted",
+      "$final-review staged",
+      "$final-review pr 123"
     ]
   }
 }

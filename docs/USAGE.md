@@ -7,7 +7,7 @@ Use `final-review` when a change is ready for final review and you want Codex to
 ### Uncommitted Code
 
 ```text
-$final-review 未提交的代码
+$final-review uncommitted
 ```
 
 Reviews:
@@ -19,7 +19,7 @@ Reviews:
 ### Staged Code
 
 ```text
-$final-review 暂存的代码
+$final-review staged
 ```
 
 Reviews only:
@@ -31,8 +31,8 @@ If unstaged or untracked files exist, the workflow reports contamination risk an
 ### Merge Requests
 
 ```text
-$final-review 这个mr 123
-$final-review 这个mr https://gitlab.example.com/group/project/-/merge_requests/123
+$final-review mr 123
+$final-review mr https://gitlab.example.com/group/project/-/merge_requests/123
 ```
 
 Uses `glab mr view` and `glab mr diff` when available.
@@ -40,11 +40,22 @@ Uses `glab mr view` and `glab mr diff` when available.
 ### Pull Requests
 
 ```text
-$final-review 这个pr 123
-$final-review 这个pr https://github.com/owner/repo/pull/123
+$final-review pr 123
+$final-review pr https://github.com/owner/repo/pull/123
 ```
 
 Uses `gh pr view` and `gh pr diff` when available.
+
+## Chinese Aliases
+
+The plugin also supports the original Chinese command aliases:
+
+```text
+$final-review 未提交的代码
+$final-review 暂存的代码
+$final-review 这个mr 123
+$final-review 这个pr 123
+```
 
 ## Review Flow
 
@@ -67,12 +78,12 @@ Uses `gh pr view` and `gh pr diff` when available.
 Codex tool rules may require explicit permission before opening subagents. When needed, the workflow asks:
 
 ```text
-允许我为这次 final-review 开两个独立只读子会话做 review 吗？
+May I open two independent read-only sub-sessions for this final-review?
 ```
 
-Answer `允许` to use independent reviewers.
+Answer yes to use independent reviewers. Codex may ask in your current conversation language.
 
-If you answer `不允许`, or subagents are not available, Codex runs two local review passes and reports:
+If you answer no, or subagents are not available, Codex runs two local review passes and reports:
 
 ```text
 Review independence: local two-pass fallback, no independent subagents used.
@@ -98,4 +109,3 @@ The workflow stops after three cycles unless you explicitly ask it to continue:
 - Cycle 1: initial full review
 - Cycle 2: impact review
 - Cycle 3: final full review
-

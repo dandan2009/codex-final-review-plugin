@@ -5,7 +5,7 @@
 The MCP server is local. Codex starts it as:
 
 ```bash
-python3 ./scripts/final_review_mcp.py
+python3 ./scripts/run_mcp.py
 ```
 
 It communicates over stdio, not a remote HTTP server.
@@ -50,4 +50,3 @@ and files ending in:
 ## Code Changes
 
 The MCP tool never changes code. Code changes are made by Codex only after the skill validates a finding and marks it `accepted`.
-

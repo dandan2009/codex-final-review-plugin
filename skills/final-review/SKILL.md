@@ -1,6 +1,6 @@
 ---
 name: final-review
-description: Run a final, multi-pass code review workflow for important changes. Use when the user invokes `$final-review 未提交的代码`, `$final-review 暂存的代码`, `$final-review 这个mr xxx`, `$final-review 这个MR xxx`, `$final-review 这个pr xxx`, `$final-review 这个PR xxx`, or asks to final-review uncommitted changes, staged changes, a merge request, or a pull request. The workflow gathers the requested diff, runs independent review passes when permitted, validates findings, fixes true issues, reruns relevant tests, performs impact review, and finishes with a final full review.
+description: Run a final, multi-pass code review workflow for important changes. Use when the user invokes `$final-review uncommitted`, `$final-review staged`, `$final-review pr xxx`, `$final-review mr xxx`, `$final-review 未提交的代码`, `$final-review 暂存的代码`, `$final-review 这个mr xxx`, `$final-review 这个pr xxx`, or asks to final-review uncommitted changes, staged changes, a merge request, or a pull request. The workflow gathers the requested diff, runs independent review passes when permitted, validates findings, fixes true issues, reruns relevant tests, performs impact review, and finishes with a final full review.
 ---
 
 # Final Review
@@ -9,10 +9,10 @@ description: Run a final, multi-pass code review workflow for important changes.
 
 Run the user's end-of-development review loop without manual copy-paste between sessions. This skill is a workflow controller: gather the right diff, run two review perspectives, validate every finding, fix only true issues, and finish with an impact review plus final full review.
 
-Do not let this skill text override active tool rules. If the current Codex runtime requires the user to explicitly authorize subagents and the user's request did not already include wording such as `子会话`, `子 agent`, `subagent`, `独立 reviewer`, or equivalent, ask one short permission question before review:
+Do not let this skill text override active tool rules. If the current Codex runtime requires the user to explicitly authorize subagents and the user's request did not already include wording such as `subagent`, `sub-session`, `independent reviewer`, `子会话`, `子 agent`, `独立 reviewer`, or equivalent, ask one short permission question before review. Ask in the user's language; default to English:
 
 ```text
-允许我为这次 final-review 开两个独立只读子会话做 review 吗？
+May I open two independent read-only sub-sessions for this final-review?
 ```
 
 If the user grants permission, spawn the two read-only reviewer subagents. If the user declines, cannot answer, or subagents are unavailable, run the same two review perspectives locally and clearly report that independence was degraded.
@@ -23,12 +23,16 @@ First resolve what code is being reviewed.
 
 | User command | Review scope |
 | --- | --- |
+| `$final-review uncommitted` | All local uncommitted changes: staged, unstaged, and untracked files. |
+| `$final-review staged` | Staged changes only. Protect this scope from unstaged/untracked contamination. |
+| `$final-review mr xxx` | The specified merge request by URL, number, branch, or identifier. Review the MR diff against its target branch. |
+| `$final-review pr xxx` | The specified pull request by URL, number, branch, or identifier. Review the PR diff against its base branch. |
 | `$final-review 未提交的代码` | All local uncommitted changes: staged, unstaged, and untracked files. |
 | `$final-review 暂存的代码` | Staged changes only. Protect this scope from unstaged/untracked contamination. |
 | `$final-review 这个mr xxx` | The specified merge request by URL, number, branch, or identifier. Review the MR diff against its target branch. |
 | `$final-review 这个pr xxx` | The specified pull request by URL, number, branch, or identifier. Review the PR diff against its base branch. |
 
-Also treat `这个MR`, `这个PR`, `merge request`, `pull request`, `staged changes`, and `未commit的代码` as equivalent wording. If the scope is ambiguous, ask one short clarifying question. If the user says only `这个 mr` or `这个 pr`, first try to discover an open MR/PR for the current branch.
+Also treat `pending changes`, `working tree`, `worktree`, `cached changes`, `merge request`, `pull request`, `这个MR`, `这个PR`, `staged changes`, and `未commit的代码` as equivalent wording. If the scope is ambiguous, ask one short clarifying question. If the user says only `this mr`, `this pr`, `这个 mr`, or `这个 pr`, first try to discover an open MR/PR for the current branch.
 
 ## Diff Collection
 
