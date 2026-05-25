@@ -1,0 +1,23 @@
+{
+  "name": "final-review",
+  "version": "0.1.0",
+  "description": "Final multi-pass code review workflow for uncommitted, staged, MR, and PR changes.",
+  "author": {
+    "name": "Shan"
+  },
+  "mcpServers": "./.mcp.json",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Final Review",
+    "shortDescription": "Final review for uncommitted, staged, MR/PR",
+    "longDescription": "Final Review packages the final-review workflow as a local Codex plugin. It resolves the requested diff, runs two review perspectives, validates findings, fixes true issues, reruns checks, performs impact review, and reports remaining risk. When independent subagent authorization is missing, Codex asks once before review; otherwise the workflow falls back to local two-pass review and reports that downgrade.",
+    "developerName": "Shan",
+    "category": "Productivity",
+    "capabilities": ["Review", "Interactive", "Write"],
+    "defaultPrompt": [
+      "$final-review 未提交的代码",
+      "$final-review 暂存的代码",
+      "$final-review 这个mr xxx"
+    ]
+  }
+}

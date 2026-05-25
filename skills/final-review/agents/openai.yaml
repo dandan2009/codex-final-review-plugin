@@ -1,0 +1,6 @@
+interface:
+  display_name: "Final Review"
+  short_description: "Final review for uncommitted, staged, MR/PR"
+  default_prompt: "$final-review 未提交的代码"
+policy:
+  allow_implicit_invocation: true
