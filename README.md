@@ -1,5 +1,7 @@
 # Codex Final Review Plugin
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 `final-review` is a local Codex plugin for the final code-review loop before shipping. It lets you type short prompts such as:
 
 ```text
