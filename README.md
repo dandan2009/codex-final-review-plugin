@@ -100,14 +100,8 @@ $final-review pr 123
 $final-review pr https://github.com/owner/repo/pull/123
 ```
 
-Chinese aliases are also supported:
+For Chinese commands, see [简体中文](README.zh-CN.md).
 
-```text
-$final-review 未提交的代码
-$final-review 暂存的代码
-$final-review 这个mr 123
-$final-review 这个pr 123
-```
 
 If Codex needs explicit permission to open independent reviewer sub-sessions, it will ask:
 

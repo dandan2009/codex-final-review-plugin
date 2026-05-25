@@ -2,16 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-`final-review` 是一个本地 Codex 插件，用来自动化“上线前终审”代码 review 流程。你可以用很短的命令触发它：
-
-```text
-$final-review uncommitted
-$final-review staged
-$final-review mr 123
-$final-review pr 123
-```
-
-也支持中文别名：
+`final-review` 是一个本地 Codex 插件，用来自动化“上线前终审”代码 review 流程。你可以用很短的中文命令触发它：
 
 ```text
 $final-review 未提交的代码
@@ -86,36 +77,36 @@ python3 install.py
 Review 所有本地未提交代码：
 
 ```text
-$final-review uncommitted
+$final-review 未提交的代码
 ```
 
 Review 暂存区代码：
 
 ```text
-$final-review staged
+$final-review 暂存的代码
 ```
 
 Review GitLab merge request：
 
 ```text
-$final-review mr 123
-$final-review mr https://gitlab.example.com/group/project/-/merge_requests/123
+$final-review 这个mr 123
+$final-review 这个mr https://gitlab.example.com/group/project/-/merge_requests/123
 ```
 
 Review GitHub pull request：
 
 ```text
-$final-review pr 123
-$final-review pr https://github.com/owner/repo/pull/123
+$final-review 这个pr 123
+$final-review 这个pr https://github.com/owner/repo/pull/123
 ```
 
-中文别名：
+也支持英文命令：
 
 ```text
-$final-review 未提交的代码
-$final-review 暂存的代码
-$final-review 这个mr 123
-$final-review 这个pr 123
+$final-review uncommitted
+$final-review staged
+$final-review mr 123
+$final-review pr 123
 ```
 
 如果 Codex 需要你明确授权打开独立子会话，它会先问：
@@ -199,4 +190,3 @@ rm -rf ~/plugins/final-review
 - [Usage Guide](docs/USAGE.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Security Notes](docs/SECURITY.md)
-
