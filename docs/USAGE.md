@@ -74,15 +74,16 @@ $final-review 这个pr 123
 4. Run two review perspectives:
    - General Codex code review
    - Real gstack-review when available, otherwise the built-in gstack-style structural review fallback
-5. Build a finding ledger.
-6. Validate each finding with code or runtime evidence.
-7. Explain whether each issue exists, how it happens, impact, proposed fix, files to edit, and verification plan.
-8. Stop and wait for user confirmation before editing files.
-9. Fix only user-approved findings.
-10. Run relevant checks.
-11. Perform impact review.
-12. Run final full review.
-13. Report fixed, rejected, deferred, and remaining findings.
+5. Report both reviewer outcomes separately, including `no findings` / `未发现问题` when one reviewer finds nothing.
+6. Build a finding ledger.
+7. Validate each finding with code or runtime evidence.
+8. Explain whether each issue exists, how it happens, impact, proposed fix, files to edit, and verification plan.
+9. Stop and wait for user confirmation before editing files.
+10. Fix only user-approved findings.
+11. Run relevant checks.
+12. Perform impact review.
+13. Run final full review.
+14. Report fixed, rejected, deferred, and remaining findings.
 
 ## Subagent Behavior
 
@@ -103,6 +104,14 @@ If gstack-review is unavailable or blocked by the current Codex environment, the
 ```text
 Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
 ```
+
+Every report must show both reviewer results. If Reviewer A finds nothing, it should still say:
+
+```text
+Reviewer A: Codex review - no findings.
+```
+
+In Chinese output, use `未发现问题` for the no-finding result.
 
 ## Finding Statuses
 

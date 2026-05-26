@@ -99,6 +99,8 @@ Record the original selected diff and baseline check result before making any fi
 
 Run two review perspectives over the same selected diff/context.
 
+Always keep a separate result record for each reviewer, even when that reviewer finds nothing. Do not omit a reviewer from the user-facing report just because its finding list is empty.
+
 ### Independent Subagents
 
 Use two independent read-only subagents by default when the active tool rules allow it. The default final-review invocation is already authorization for these reviewer subagents; do not ask a separate permission question. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit target repository files.
@@ -126,6 +128,23 @@ When this fallback is used, the final report must include:
 ```text
 Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
 ```
+
+### Reviewer Result Summary
+
+After the reviewer passes finish, preserve and report both reviewer-level outcomes before merging findings into the ledger:
+
+```text
+Reviewer A: Codex review - no findings.
+Reviewer B: gstack-review - 2 findings.
+```
+
+Use the actual source for Reviewer B:
+
+- `gstack-review` when the real gstack reviewer ran.
+- `gstack-style fallback` when the built-in checklist ran.
+- `local gstack-style pass` when subagents were unavailable and the second perspective ran locally.
+
+If a reviewer finds nothing, write an explicit no-finding result. In Chinese conversations, write `未发现问题`. If a reviewer produced findings but all were later rejected, still show that reviewer produced findings and reflect the final ledger decision separately.
 
 ### Fallback Without Subagents
 
@@ -249,6 +268,8 @@ Finish with:
 
 - Scope reviewed
 - Whether independent subagents were used or local fallback was used
+- Reviewer A result, even when no issues were found
+- Reviewer B result, even when no issues were found, including whether real gstack-review or fallback was used
 - Checks run and results, including skipped or contaminated checks
 - Confirmed-real findings awaiting approval, when in the initial review phase
 - Approved findings fixed, when in the fix phase
