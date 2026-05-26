@@ -32,7 +32,7 @@ It also defines display metadata and default prompts.
 - Subagent default behavior and fallback reporting
 - Finding schema
 - Ledger state transitions
-- Fix and verification rules
+- Explanation, confirmation, fix, and verification rules
 - Impact review
 - Final report format
 
@@ -65,7 +65,7 @@ The MCP tool is deterministic and good at collecting context:
 The skill is procedural and good at controlling the review:
 
 - What counts as a real finding
-- When to fix
+- When to explain, wait for confirmation, and fix
 - When to reject
 - How to avoid infinite loops
 - What final report to produce

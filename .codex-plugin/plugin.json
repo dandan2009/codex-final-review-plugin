@@ -1,6 +1,6 @@
 {
   "name": "final-review",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Final multi-pass code review workflow for uncommitted, staged, MR, and PR changes.",
   "author": {
     "name": "Shan",
@@ -22,7 +22,7 @@
   "interface": {
     "displayName": "Final Review",
     "shortDescription": "Final review for uncommitted, staged, MR/PR",
-    "longDescription": "Final Review packages a final code-review workflow as a local Codex plugin. By default it reviews local uncommitted code and uses two independent read-only sub-sessions for cross-review when allowed, without asking an extra permission question. It also resolves staged, PR, and MR diffs, runs the Codex review perspective plus gstack-review when available, validates findings, fixes true issues, reruns checks, performs impact review, and reports remaining risk. When gstack-review is unavailable, it uses a built-in gstack-style structural fallback and reports that downgrade. When independent subagents are unavailable or blocked by the active runtime, the workflow falls back to local two-pass review and reports that downgrade.",
+    "longDescription": "Final Review packages a final code-review workflow as a local Codex plugin. By default it reviews local uncommitted code and uses two independent read-only sub-sessions for cross-review when allowed, without asking an extra permission question. It resolves staged, PR, and MR diffs, runs the Codex review perspective plus gstack-review when available, validates findings, explains whether each issue is real and how it happens, then waits for user confirmation before editing files. After confirmation it fixes approved issues, reruns checks, performs impact review, and reports remaining risk. When gstack-review is unavailable, it uses a built-in gstack-style structural fallback and reports that downgrade. When independent subagents are unavailable or blocked by the active runtime, the workflow falls back to local two-pass review and reports that downgrade.",
     "developerName": "Shan",
     "category": "Productivity",
     "capabilities": ["Review", "Interactive", "Write"],

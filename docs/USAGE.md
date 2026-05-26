@@ -1,6 +1,6 @@
 # Usage Guide
 
-Use `final-review` when a change is ready for final review and you want Codex to review, validate, fix, and re-check the result.
+Use `final-review` when a change is ready for final review and you want Codex to review, validate, explain, wait for confirmation, then fix and re-check the approved result.
 
 ## Commands
 
@@ -76,11 +76,13 @@ $final-review 这个pr 123
    - Real gstack-review when available, otherwise the built-in gstack-style structural review fallback
 5. Build a finding ledger.
 6. Validate each finding with code or runtime evidence.
-7. Fix only accepted findings.
-8. Run relevant checks.
-9. Perform impact review.
-10. Run final full review.
-11. Report fixed, rejected, deferred, and remaining findings.
+7. Explain whether each issue exists, how it happens, impact, proposed fix, files to edit, and verification plan.
+8. Stop and wait for user confirmation before editing files.
+9. Fix only user-approved findings.
+10. Run relevant checks.
+11. Perform impact review.
+12. Run final full review.
+13. Report fixed, rejected, deferred, and remaining findings.
 
 ## Subagent Behavior
 
@@ -107,18 +109,19 @@ Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
 The workflow uses a ledger with these statuses:
 
 - `needs-evidence`: plausible but not proven
-- `accepted`: proven real and eligible for fixing
-- `fixed`: accepted and fixed
+- `confirmed-real`: proven real, explained, and waiting for user approval
+- `approved`: confirmed real and approved by the user for fixing
+- `fixed`: approved and fixed
 - `rejected`: false, unsupported, style-only, or unreachable
 - `deferred`: real but outside the requested review/fix scope
 
-Only `accepted` findings with concrete evidence may be fixed.
+Only `approved` findings may be fixed.
 
 ## Cycle Limit
 
 The workflow stops after three cycles unless you explicitly ask it to continue:
 
-- Cycle 0: baseline check fixes
-- Cycle 1: initial full review
-- Cycle 2: impact review
+- Cycle 0: baseline check findings
+- Cycle 1: initial full review, validation, explanation, and modification plan
+- Cycle 2: user-approved fixes, relevant checks, and impact review
 - Cycle 3: final full review

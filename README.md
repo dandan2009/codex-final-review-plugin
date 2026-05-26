@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-final-review 把我原本手动执行的终审流程变成一个命令：Codex 开发完功能后，自动用两个独立会话分别做 Codex review 和 gstack-review，再把 review 结果带回原开发上下文中逐条判断是否真实存在；真实问题自动修复，修复后继续复查，直到没有需要处理的问题。
+final-review 把我原本手动执行的终审流程变成一个命令：Codex 开发完功能后，自动用两个独立会话分别做 Codex review 和 gstack-review，再把 review 结果带回原开发上下文中逐条判断是否真实存在；主会话先详细解释问题是否存在、问题怎么发生、建议怎么改，等我确认修改方案之后再修复；修复后继续复查，直到没有需要处理的问题。
 
 `final-review` is a local Codex plugin for the final code-review loop before shipping. It lets you type short prompts such as:
 
@@ -16,7 +16,7 @@ $final-review pr 123
 
 `$final-review` by itself defaults to reviewing all local uncommitted code and uses two independent read-only sub-sessions for cross-review when Codex allows it. It does not ask an extra permission question for the default reviewer sub-sessions.
 
-The plugin resolves the requested diff, collects review context, runs the Codex review perspective plus the gstack-review perspective when available, validates findings, fixes true issues, reruns relevant checks, performs impact review, and reports remaining risk.
+The plugin resolves the requested diff, collects review context, runs the Codex review perspective plus the gstack-review perspective when available, validates findings, explains whether each issue is real and how it happens, waits for confirmation, then fixes approved issues, reruns relevant checks, performs impact review, and reports remaining risk.
 
 ## What It Includes
 

@@ -313,7 +313,7 @@ def final_review_collect(scope: Scope, identifier: str | None = None, cwd: str |
     packet["ok"] = "error" not in packet
     packet["read_only"] = True
     packet["notes"] = [
-        "This tool only collects context. Codex still validates findings and applies accepted fixes.",
+        "This tool only collects context. Codex still validates findings, explains real issues, and only applies user-approved fixes.",
         "Independent subagents are governed by the active Codex tool rules and user authorization.",
     ]
     return packet

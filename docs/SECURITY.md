@@ -55,4 +55,4 @@ It also skips untracked symlinks and files that resolve outside the repository r
 
 ## Code Changes
 
-The MCP tool never changes code. Code changes are made by Codex only after the skill validates a finding and marks it `accepted`.
+The MCP tool never changes code. Code changes are made by Codex only after the skill validates a finding, explains the issue and proposed fix, and the user approves the modification plan.
