@@ -1,6 +1,6 @@
 ---
 name: final-review
-description: Run a final, multi-pass code review workflow for important changes. Use when the user invokes `$final-review uncommitted`, `$final-review staged`, `$final-review pr xxx`, `$final-review mr xxx`, `$final-review 未提交的代码`, `$final-review 暂存的代码`, `$final-review 这个mr xxx`, `$final-review 这个pr xxx`, or asks to final-review uncommitted changes, staged changes, a merge request, or a pull request. The workflow gathers the requested diff, runs independent review passes when permitted, validates findings, fixes true issues, reruns relevant tests, performs impact review, and finishes with a final full review.
+description: Run a final, multi-pass code review workflow for important changes. Use when the user invokes `$final-review`, `$final-review uncommitted`, `$final-review staged`, `$final-review pr xxx`, `$final-review mr xxx`, `$final-review 未提交的代码`, `$final-review 暂存的代码`, `$final-review 这个mr xxx`, `$final-review 这个pr xxx`, or asks to final-review uncommitted changes, staged changes, a merge request, or a pull request. With no explicit scope, default to uncommitted changes. The workflow gathers the requested diff, runs independent review passes when permitted, validates findings, fixes true issues, reruns relevant tests, performs impact review, and finishes with a final full review.
 ---
 
 # Final Review
@@ -9,7 +9,9 @@ description: Run a final, multi-pass code review workflow for important changes.
 
 Run the user's end-of-development review loop without manual copy-paste between sessions. This skill is a workflow controller: gather the right diff, run the Codex review perspective plus real gstack-review when available, validate every finding, fix only true issues, and finish with an impact review plus final full review.
 
-Do not let this skill text override active tool rules. If the current Codex runtime requires the user to explicitly authorize subagents and the user's request did not already include wording such as `subagent`, `sub-session`, `independent reviewer`, `子会话`, `子 agent`, `独立 reviewer`, or equivalent, ask one short permission question before review. Ask in the user's language; default to English:
+Default invocation means: review uncommitted code and use two independent read-only sub-sessions for cross-review when the active Codex runtime allows it. Treat `$final-review`, `Final Review`, plugin default prompts, and `未提交的代码` prompts as requesting this default mode.
+
+Do not let this skill text override active tool rules. If the current Codex runtime requires the user to explicitly authorize subagents and the user's request did not already include wording such as `subagent`, `sub-session`, `independent reviewer`, `子会话`, `子 agent`, `独立 reviewer`, `交叉审查`, `默认打开两个独立子会话`, or equivalent, ask one short permission question before review. Ask in the user's language; default to English:
 
 ```text
 May I open two independent read-only sub-sessions for this final-review?
@@ -19,10 +21,12 @@ If the user grants permission, spawn the two read-only reviewer subagents. If th
 
 ## Scope Routing
 
-First resolve what code is being reviewed.
+First resolve what code is being reviewed. Do not ask for scope when the user invokes `$final-review`, clicks a `Final Review` default prompt, or says `未提交的代码`; default to uncommitted changes.
 
 | User command | Review scope |
 | --- | --- |
+| `$final-review` | Default: all local uncommitted changes, using independent cross-review when allowed. |
+| `Final Review` | Default: all local uncommitted changes, using independent cross-review when allowed. |
 | `$final-review uncommitted` | All local uncommitted changes: staged, unstaged, and untracked files. |
 | `$final-review staged` | Staged changes only. Protect this scope from unstaged/untracked contamination. |
 | `$final-review mr xxx` | The specified merge request by URL, number, branch, or identifier. Review the MR diff against its target branch. |
@@ -32,7 +36,7 @@ First resolve what code is being reviewed.
 | `$final-review 这个mr xxx` | The specified merge request by URL, number, branch, or identifier. Review the MR diff against its target branch. |
 | `$final-review 这个pr xxx` | The specified pull request by URL, number, branch, or identifier. Review the PR diff against its base branch. |
 
-Also treat `pending changes`, `working tree`, `worktree`, `cached changes`, `merge request`, `pull request`, `这个MR`, `这个PR`, `staged changes`, and `未commit的代码` as equivalent wording. If the scope is ambiguous, ask one short clarifying question. If the user says only `this mr`, `this pr`, `这个 mr`, or `这个 pr`, first try to discover an open MR/PR for the current branch.
+Also treat `pending changes`, `working tree`, `worktree`, `uncommitted`, `default`, `默认`, `未提交`, `未提交的代码`, `未commit的代码`, `cached changes`, `merge request`, `pull request`, `这个MR`, `这个PR`, and `staged changes` as equivalent wording. If the scope is still ambiguous after applying the default, ask one short clarifying question. If the user says only `this mr`, `this pr`, `这个 mr`, or `这个 pr`, first try to discover an open MR/PR for the current branch.
 
 ## Diff Collection
 
@@ -103,7 +107,7 @@ Run two review perspectives over the same selected diff/context.
 
 ### Independent Subagents
 
-Use two independent read-only subagents only when the active tool rules allow it. If authorization is missing but can be requested, ask the one-line permission question from the Overview before starting reviewer passes. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit target repository files.
+Use two independent read-only subagents by default when the active tool rules allow it. If authorization is missing but can be requested, ask the one-line permission question from the Overview before starting reviewer passes. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit target repository files.
 
 Reviewer A: general Codex code review.
 

@@ -104,7 +104,7 @@ python3 install.py --codex-config ~/.codex/config.toml
 In a Codex session, try:
 
 ```text
-$final-review uncommitted
+$final-review
 ```
 
 If the plugin is loaded correctly, Codex should use the final-review workflow. If independent subagents need permission, Codex will ask one short permission question before review.

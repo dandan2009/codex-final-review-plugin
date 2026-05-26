@@ -7,11 +7,14 @@ final-review 把我原本手动执行的终审流程变成一个命令：Codex �
 `final-review` 是一个本地 Codex 插件，用来自动化“上线前终审”代码 review 流程。你可以用很短的中文命令触发它：
 
 ```text
+$final-review
 $final-review 未提交的代码
 $final-review 暂存的代码
 $final-review 这个mr 123
 $final-review 这个pr 123
 ```
+
+单独输入 `$final-review` 时，默认 review 所有本地未提交代码，并在 Codex 允许时默认打开两个独立只读子会话做交叉审查。
 
 插件会解析你要 review 的 diff，收集上下文，运行 Codex review 视角以及可用时的 gstack-review 视角，验证 finding 是否真实，修复真实问题，重新运行相关检查，做影响面复查，并输出剩余风险。
 
@@ -83,6 +86,12 @@ python3 install.py
 安装完成后，重启 Codex，让插件和 MCP server 被重新发现。
 
 ## 使用
+
+默认 review 所有本地未提交代码：
+
+```text
+$final-review
+```
 
 Review 所有本地未提交代码：
 

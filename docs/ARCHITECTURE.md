@@ -25,6 +25,7 @@ It also defines display metadata and default prompts.
 `skills/final-review/SKILL.md` defines the workflow:
 
 - Scope routing
+- Default routing: `$final-review` means uncommitted code plus independent cross-review when allowed
 - Diff collection rules
 - Baseline checks
 - Review pass protocol

@@ -7,11 +7,14 @@ final-review 把我原本手动执行的终审流程变成一个命令：Codex �
 `final-review` is a local Codex plugin for the final code-review loop before shipping. It lets you type short prompts such as:
 
 ```text
+$final-review
 $final-review uncommitted
 $final-review staged
 $final-review mr 123
 $final-review pr 123
 ```
+
+`$final-review` by itself defaults to reviewing all local uncommitted code and attempts two independent read-only sub-sessions for cross-review when Codex allows it.
 
 The plugin resolves the requested diff, collects review context, runs the Codex review perspective plus the gstack-review perspective when available, validates findings, fixes true issues, reruns relevant checks, performs impact review, and reports remaining risk.
 
@@ -83,6 +86,12 @@ The installer:
 Restart Codex after installation so the plugin and MCP server are discovered.
 
 ## Usage
+
+Default review for all local uncommitted changes:
+
+```text
+$final-review
+```
 
 Review all local uncommitted changes:
 

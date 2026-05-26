@@ -4,6 +4,14 @@ Use `final-review` when a change is ready for final review and you want Codex to
 
 ## Commands
 
+### Default
+
+```text
+$final-review
+```
+
+Reviews all local uncommitted code by default: staged changes, unstaged changes, and small safe untracked source files. It also attempts to use two independent read-only sub-sessions for cross-review when the active Codex runtime allows it.
+
 ### Uncommitted Code
 
 ```text
@@ -60,6 +68,7 @@ $final-review 这个pr 123
 ## Review Flow
 
 1. Resolve review scope.
+   - If no scope is provided, default to uncommitted code.
 2. Collect the selected diff and context.
 3. Run safe baseline checks when discoverable.
 4. Run two review perspectives:
