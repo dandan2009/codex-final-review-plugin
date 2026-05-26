@@ -2,6 +2,8 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+final-review 把我原本手动执行的终审流程变成一个命令：Codex 开发完功能后，自动用两个独立会话分别做 Codex review 和 gstack-review，再把 review 结果带回原开发上下文中逐条判断是否真实存在；真实问题自动修复，修复后继续复查，直到没有需要处理的问题。
+
 `final-review` 是一个本地 Codex 插件，用来自动化“上线前终审”代码 review 流程。你可以用很短的中文命令触发它：
 
 ```text
