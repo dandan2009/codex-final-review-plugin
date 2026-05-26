@@ -1,6 +1,6 @@
 {
   "name": "final-review",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Final multi-pass code review workflow for uncommitted, staged, MR, and PR changes.",
   "author": {
     "name": "Shan",

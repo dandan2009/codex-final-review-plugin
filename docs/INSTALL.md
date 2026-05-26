@@ -19,6 +19,16 @@ python3 install.py
 
 The installer creates `~/plugins/final-review`, creates a plugin-local `.venv`, installs `requirements.txt`, and updates `~/.agents/plugins/marketplace.json`.
 
+It also checks whether Codex can see gstack's `review` / `gstack-review` skill. If not, it tries to install gstack for Codex automatically:
+
+```bash
+git clone --single-branch --depth 1 https://github.com/garrytan/gstack.git ~/gstack
+cd ~/gstack
+bash ./setup --host codex
+```
+
+Automatic gstack installation requires `git`, `bun`, and `bash`. If it cannot complete, `final-review` remains installed and uses its built-in gstack-style fallback.
+
 ## 3. Restart Codex
 
 Restart Codex so it reloads local plugins and MCP servers.
@@ -33,7 +43,7 @@ python3 -m pip install mcp
 
 ## Companion Reviewer Dependency
 
-The exact original workflow expects gstack's `review` / `gstack-review` skill to be installed and visible to Codex. This plugin does not vendor gstack.
+The exact original workflow expects gstack's `review` / `gstack-review` skill to be installed and visible to Codex. This plugin does not vendor gstack, but the installer can clone and set up gstack for Codex when it is missing.
 
 If gstack-review is unavailable, `final-review` can still run with its built-in gstack-style structural checklist. The final report should say that real gstack-review was not used.
 
@@ -55,6 +65,18 @@ Skip dependency installation:
 
 ```bash
 python3 install.py --no-deps
+```
+
+Skip automatic gstack installation:
+
+```bash
+python3 install.py --no-gstack
+```
+
+Use a custom gstack checkout/install directory:
+
+```bash
+python3 install.py --gstack-dir ~/dev/gstack
 ```
 
 Use a specific Python interpreter for the plugin `.venv`:

@@ -29,11 +29,13 @@ $final-review 这个pr 123
 - `git`
 - 如果要完整复刻原始流程，推荐安装：
   - gstack，并让 Codex 能发现它的 `review` / `gstack-review` skill
+  - Bun，仅在安装脚本需要自动安装 gstack 时使用
+  - Bash，仅在安装脚本需要自动安装 gstack 时使用
 - PR/MR review 可选依赖：
   - GitHub CLI：`gh`
   - GitLab CLI：`glab`
 
-如果没有 gstack-review，`final-review` 仍然可以运行，但会降级使用内置的 gstack-style 结构化 review 清单，并在最终报告里明确说明这个降级。
+安装脚本会检查 Codex 是否已经能发现 `gstack-review`。如果没有，会尝试把 `https://github.com/garrytan/gstack.git` clone 到 `~/gstack`，并运行 `bash ./setup --host codex`。如果跳过或自动安装失败，`final-review` 仍然可以运行，但会降级使用内置的 gstack-style 结构化 review 清单，并在最终报告里明确说明这个降级。
 
 安装脚本会创建插件本地 `.venv`，并从 `requirements.txt` 安装 Python 依赖。如果想手动安装依赖，可以运行：
 
@@ -74,6 +76,7 @@ python3 install.py
 - 创建 `~/plugins/final-review/.venv` 并安装 Python 依赖
 - 创建或更新 `~/.agents/plugins/marketplace.json`
 - 添加 Codex 识别插件所需的 marketplace entry
+- 检查 `gstack-review`，如果缺失则为 Codex 自动安装 gstack
 - 保留当前仓库 checkout 作为后续更新源
 
 安装完成后，重启 Codex，让插件和 MCP server 被重新发现。

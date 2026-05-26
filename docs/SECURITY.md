@@ -10,6 +10,10 @@ python3 ./scripts/run_mcp.py
 
 It communicates over stdio, not a remote HTTP server.
 
+## Installer Network Access
+
+The installer may use the network only when `gstack-review` is missing and automatic gstack installation is enabled. In that case it runs a shallow clone from `https://github.com/garrytan/gstack.git` and executes gstack's Codex setup script. Pass `--no-gstack` to skip this behavior and use the built-in gstack-style fallback instead.
+
 ## Read-Only Context Collection
 
 `final_review_collect` is designed to be read-only. It does not:

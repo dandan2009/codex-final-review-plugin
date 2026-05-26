@@ -29,11 +29,13 @@ The plugin resolves the requested diff, collects review context, runs the Codex 
 - `git`
 - Recommended for the exact original workflow:
   - gstack with its `review` / `gstack-review` skill available to Codex
+  - Bun, only if the installer needs to auto-install gstack
+  - Bash, only if the installer needs to auto-install gstack
 - Optional for PR/MR review:
   - GitHub CLI: `gh`
   - GitLab CLI: `glab`
 
-If gstack-review is not available, `final-review` still runs by using a built-in gstack-style structural review checklist. The final report should state that fallback clearly.
+The installer checks whether Codex can already see `gstack-review`. If it is missing, the installer tries to clone `https://github.com/garrytan/gstack.git` into `~/gstack` and run `bash ./setup --host codex`. If automatic gstack install is skipped or fails, `final-review` still runs by using a built-in gstack-style structural review checklist. The final report should state that fallback clearly.
 
 The installer creates a plugin-local `.venv` and installs Python dependencies from `requirements.txt`. To install dependencies manually instead:
 
@@ -74,6 +76,7 @@ The installer:
 - Creates `~/plugins/final-review/.venv` and installs Python dependencies
 - Creates or updates `~/.agents/plugins/marketplace.json`
 - Adds the plugin entry required by Codex
+- Checks for `gstack-review` and installs gstack for Codex when it is missing
 - Leaves your repository checkout as the source of truth for updates
 
 Restart Codex after installation so the plugin and MCP server are discovered.

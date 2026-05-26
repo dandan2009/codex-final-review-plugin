@@ -14,6 +14,7 @@ from pathlib import Path
 
 PLUGIN_NAME = "final-review"
 MIN_PYTHON = (3, 10)
+GSTACK_REPO = "https://github.com/garrytan/gstack.git"
 MARKETPLACE_ENTRY = {
     "name": PLUGIN_NAME,
     "source": {
@@ -43,6 +44,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--copy", action="store_true", help="Copy files instead of creating a symlink.")
     parser.add_argument("--force", action="store_true", help="Replace an existing install target.")
     parser.add_argument("--no-deps", action="store_true", help="Skip creating .venv and installing Python deps.")
+    parser.add_argument(
+        "--no-gstack",
+        action="store_true",
+        help="Skip automatic gstack-review installation when the gstack review skill is missing.",
+    )
+    parser.add_argument(
+        "--gstack-dir",
+        default=str(Path.home() / "gstack"),
+        help="Directory used when auto-installing gstack for Codex. Defaults to ~/gstack.",
+    )
     parser.add_argument(
         "--python",
         default=None,
@@ -227,17 +238,100 @@ def install_dependencies(plugin_path: Path, requested_python: str | None) -> Non
     print(f"Installed Python dependencies into {plugin_path / '.venv'}")
 
 
+def gstack_review_skill_paths(home: Path | None = None) -> list[Path]:
+    home = home or Path.home()
+    return [
+        home / ".codex" / "skills" / "gstack-review" / "SKILL.md",
+        home / ".codex" / "skills" / "review" / "SKILL.md",
+    ]
+
+
+def has_gstack_review(home: Path | None = None) -> bool:
+    return any(path.exists() for path in gstack_review_skill_paths(home))
+
+
+def install_gstack_for_codex(gstack_dir: Path) -> bool:
+    if not shutil.which("bun"):
+        print(
+            "Warning: gstack-review is missing, but automatic gstack install requires Bun.\n"
+            "Install Bun from https://bun.sh/ and rerun this installer, or use the built-in gstack-style fallback.",
+            file=sys.stderr,
+        )
+        return False
+
+    if gstack_dir.exists():
+        setup = gstack_dir / "setup"
+        if not setup.exists():
+            print(
+                f"Warning: gstack install directory exists but does not look like gstack: {gstack_dir}\n"
+                "Remove it or pass --gstack-dir to another path if you want automatic gstack installation.",
+                file=sys.stderr,
+            )
+            return False
+        print(f"Using existing gstack checkout: {gstack_dir}")
+    else:
+        if not shutil.which("git"):
+            print(
+                "Warning: gstack-review is missing, but automatic gstack install requires git.",
+                file=sys.stderr,
+            )
+            return False
+        gstack_dir.parent.mkdir(parents=True, exist_ok=True)
+        print(f"gstack-review not found; cloning gstack into {gstack_dir}")
+        subprocess.run(
+            ["git", "clone", "--single-branch", "--depth", "1", GSTACK_REPO, str(gstack_dir)],
+            check=True,
+        )
+
+    if not shutil.which("bash"):
+        print(
+            "Warning: gstack-review is missing, but automatic gstack setup requires bash.",
+            file=sys.stderr,
+        )
+        return False
+
+    subprocess.run(["bash", "./setup", "--host", "codex"], cwd=str(gstack_dir), check=True)
+    return has_gstack_review()
+
+
+def ensure_gstack_review(no_gstack: bool, gstack_dir: Path) -> None:
+    if has_gstack_review():
+        print("gstack-review is already available to Codex.")
+        return
+
+    if no_gstack:
+        print(
+            "gstack-review is not installed. Skipping because --no-gstack was passed; "
+            "final-review will use the built-in gstack-style fallback."
+        )
+        return
+
+    try:
+        if install_gstack_for_codex(gstack_dir):
+            print("Installed gstack-review for Codex.")
+        else:
+            print("gstack-review was not installed; final-review will use the built-in gstack-style fallback.")
+    except subprocess.CalledProcessError as exc:
+        print(
+            f"Warning: automatic gstack install failed with exit code {exc.returncode}.\n"
+            "final-review is installed and will use the built-in gstack-style fallback until gstack-review is available.",
+            file=sys.stderr,
+        )
+
+
 def main() -> None:
     args = parse_args()
     root = Path(__file__).resolve().parent
     target = Path(args.target).expanduser().resolve()
     marketplace = Path(args.marketplace).expanduser().resolve()
+    gstack_dir = Path(args.gstack_dir).expanduser().resolve()
 
     ensure_plugin_root(root)
     install_target(root, target, copy=args.copy, force=args.force)
     if not args.no_deps:
         install_dependencies(target, args.python)
     upsert_marketplace(marketplace)
+    ensure_gstack_review(args.no_gstack, gstack_dir)
     if args.no_deps:
         check_mcp_dependency()
 
