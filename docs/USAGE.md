@@ -119,7 +119,10 @@ If gstack-review is unavailable, unreadable, unsafe, or blocked by the current C
 
 ```text
 Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
+Reviewer B fallback reason: <concrete reason>
 ```
+
+The fallback reason should name the actual cause, such as unreadable skill file, active tool rules, unsafe target-repository write risk, or the exact checked paths that were missing.
 
 Every report must show both reviewer results. If Reviewer A finds nothing, it should still say:
 

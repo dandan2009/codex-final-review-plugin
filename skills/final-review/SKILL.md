@@ -134,7 +134,10 @@ When this fallback is used, the final report must include:
 
 ```text
 Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
+Reviewer B fallback reason: <skill file unreadable | active tool rules blocked it | unsafe target-repository write risk | other concrete reason>
 ```
+
+Never use a vague fallback reason. Record the concrete probe result, such as which skill paths were checked, which file could not be read, or which active runtime rule blocked use of real gstack-review.
 
 ### Reviewer Result Summary
 
