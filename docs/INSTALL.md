@@ -31,6 +31,12 @@ If you run the installer with `--no-deps`, install the MCP dependency yourself:
 python3 -m pip install mcp
 ```
 
+## Companion Reviewer Dependency
+
+The exact original workflow expects gstack's `review` / `gstack-review` skill to be installed and visible to Codex. This plugin does not vendor gstack.
+
+If gstack-review is unavailable, `final-review` can still run with its built-in gstack-style structural checklist. The final report should say that real gstack-review was not used.
+
 ## Install Options
 
 Use a physical copy instead of a symlink:
@@ -97,3 +103,5 @@ If MR review fails, check GitLab CLI auth:
 ```bash
 glab auth status
 ```
+
+If the second reviewer falls back instead of using real gstack-review, check that gstack is installed and that Codex lists the gstack `review` skill in the current environment.

@@ -13,7 +13,7 @@ $final-review 这个mr 123
 $final-review 这个pr 123
 ```
 
-插件会解析你要 review 的 diff，收集上下文，运行两个 review 视角，验证 finding 是否真实，修复真实问题，重新运行相关检查，做影响面复查，并输出剩余风险。
+插件会解析你要 review 的 diff，收集上下文，运行 Codex review 视角以及可用时的 gstack-review 视角，验证 finding 是否真实，修复真实问题，重新运行相关检查，做影响面复查，并输出剩余风险。
 
 ## 包含内容
 
@@ -27,9 +27,13 @@ $final-review 这个pr 123
 - 支持本地插件的 Codex desktop app
 - Python 3.10 或更新版本
 - `git`
+- 如果要完整复刻原始流程，推荐安装：
+  - gstack，并让 Codex 能发现它的 `review` / `gstack-review` skill
 - PR/MR review 可选依赖：
   - GitHub CLI：`gh`
   - GitLab CLI：`glab`
+
+如果没有 gstack-review，`final-review` 仍然可以运行，但会降级使用内置的 gstack-style 结构化 review 清单，并在最终报告里明确说明这个降级。
 
 安装脚本会创建插件本地 `.venv`，并从 `requirements.txt` 安装 Python 依赖。如果想手动安装依赖，可以运行：
 

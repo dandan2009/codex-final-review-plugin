@@ -64,7 +64,7 @@ $final-review 这个pr 123
 3. Run safe baseline checks when discoverable.
 4. Run two review perspectives:
    - General Codex code review
-   - gstack-style structural review
+   - Real gstack-review when available, otherwise the built-in gstack-style structural review fallback
 5. Build a finding ledger.
 6. Validate each finding with code or runtime evidence.
 7. Fix only accepted findings.
@@ -87,6 +87,16 @@ If you answer no, or subagents are not available, Codex runs two local review pa
 
 ```text
 Review independence: local two-pass fallback, no independent subagents used.
+```
+
+## gstack-review Dependency
+
+For the exact original workflow, install gstack and make sure Codex can see its `review` / `gstack-review` skill. `final-review` treats that as the second reviewer.
+
+If gstack-review is unavailable or blocked by the current Codex environment, the command still runs the second pass with a built-in gstack-style checklist and reports:
+
+```text
+Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
 ```
 
 ## Finding Statuses

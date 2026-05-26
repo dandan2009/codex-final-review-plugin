@@ -37,6 +37,8 @@ It also defines display metadata and default prompts.
 
 The skill is intentionally explicit because the workflow is high stakes: it can change code after validating findings.
 
+For the second review perspective, the skill prefers real gstack-review when the current Codex environment exposes the gstack `review` / `gstack-review` skill. If it is unavailable or blocked, the workflow uses a built-in gstack-style structural checklist and reports the downgrade.
+
 ## MCP Layer
 
 `scripts/run_mcp.py` is the entrypoint configured in `.mcp.json`. It starts the server with the plugin-local `.venv` when available.

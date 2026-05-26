@@ -13,7 +13,7 @@ $final-review mr 123
 $final-review pr 123
 ```
 
-The plugin resolves the requested diff, collects review context, runs two review perspectives, validates findings, fixes true issues, reruns relevant checks, performs impact review, and reports remaining risk.
+The plugin resolves the requested diff, collects review context, runs the Codex review perspective plus the gstack-review perspective when available, validates findings, fixes true issues, reruns relevant checks, performs impact review, and reports remaining risk.
 
 ## What It Includes
 
@@ -27,9 +27,13 @@ The plugin resolves the requested diff, collects review context, runs two review
 - Codex desktop app with local plugin support
 - Python 3.10 or newer
 - `git`
+- Recommended for the exact original workflow:
+  - gstack with its `review` / `gstack-review` skill available to Codex
 - Optional for PR/MR review:
   - GitHub CLI: `gh`
   - GitLab CLI: `glab`
+
+If gstack-review is not available, `final-review` still runs by using a built-in gstack-style structural review checklist. The final report should state that fallback clearly.
 
 The installer creates a plugin-local `.venv` and installs Python dependencies from `requirements.txt`. To install dependencies manually instead:
 

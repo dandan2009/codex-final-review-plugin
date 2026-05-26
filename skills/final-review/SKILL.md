@@ -7,7 +7,7 @@ description: Run a final, multi-pass code review workflow for important changes.
 
 ## Overview
 
-Run the user's end-of-development review loop without manual copy-paste between sessions. This skill is a workflow controller: gather the right diff, run two review perspectives, validate every finding, fix only true issues, and finish with an impact review plus final full review.
+Run the user's end-of-development review loop without manual copy-paste between sessions. This skill is a workflow controller: gather the right diff, run the Codex review perspective plus real gstack-review when available, validate every finding, fix only true issues, and finish with an impact review plus final full review.
 
 Do not let this skill text override active tool rules. If the current Codex runtime requires the user to explicitly authorize subagents and the user's request did not already include wording such as `subagent`, `sub-session`, `independent reviewer`, `子会话`, `子 agent`, `独立 reviewer`, or equivalent, ask one short permission question before review. Ask in the user's language; default to English:
 
@@ -103,15 +103,17 @@ Run two review perspectives over the same selected diff/context.
 
 ### Independent Subagents
 
-Use two independent read-only subagents only when the active tool rules allow it. If authorization is missing but can be requested, ask the one-line permission question from the Overview before starting reviewer passes. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit files.
+Use two independent read-only subagents only when the active tool rules allow it. If authorization is missing but can be requested, ask the one-line permission question from the Overview before starting reviewer passes. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit target repository files.
 
 Reviewer A: general Codex code review.
 
 Focus on bugs, regressions, edge cases, test gaps, data-flow problems, API contract issues, concurrency/state bugs, and maintainability risks. Ignore style-only nits unless they hide a real defect.
 
-Reviewer B: gstack-style structural review.
+Reviewer B: real gstack-review when available.
 
-Do not invoke the real gstack `review` skill inside a read-only subagent by default, because it may write session/config/analytics files or prompt repository changes. Instead, use this checklist:
+Prefer the active gstack `review` / `gstack-review` skill when Codex exposes it and current tool rules allow it. Treat it as the second reviewer from the user's original workflow. gstack may write local state under `~/.gstack`; that is acceptable only when it does not edit the target repository and the active tool rules allow those local side effects.
+
+If real gstack-review is unavailable, blocked, or unsafe under the current tool rules, run this built-in gstack-style structural checklist instead:
 
 - SQL safety, migrations, transactions, and data integrity
 - Authorization, tenancy boundaries, and permission checks
@@ -121,7 +123,11 @@ Do not invoke the real gstack `review` skill inside a read-only subagent by defa
 - Rollout risks, feature flags, observability, and failure modes
 - Tests that would catch the highest-risk failure
 
-Only run the real gstack `review` skill if the user explicitly asks for real gstack-review and accepts its side effects. Keep that execution out of read-only reviewer subagents.
+When this fallback is used, the final report must include:
+
+```text
+Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.
+```
 
 ### Fallback Without Subagents
 
@@ -137,7 +143,7 @@ Require every finding to use this shape:
 
 ```text
 id:
-reviewer: codex | gstack-style | local | check
+reviewer: codex | gstack-review | gstack-style | local | check
 cycle:
 severity: critical | high | medium | low
 file:
