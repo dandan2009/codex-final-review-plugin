@@ -137,7 +137,7 @@ final_review_collect(scope, identifier?, cwd?)
 
 Supported scopes:
 
-- `uncommitted`: collects `git status`, `git diff`, `git diff --cached`, and small safe untracked files
+- `uncommitted`: collects `git status`, `git diff`, `git diff --cached`, and small safe untracked regular files
 - `staged`: collects `git diff --cached` and reports unstaged/untracked contamination
 - `pr`: collects `gh pr view` and `gh pr diff`
 - `mr`: collects `glab mr view` and `glab mr diff`

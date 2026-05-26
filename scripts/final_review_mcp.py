@@ -13,6 +13,7 @@ import subprocess
 from pathlib import Path
 from shutil import which
 from typing import Any, Literal
+from urllib.parse import unquote, urlparse
 
 from mcp.server.fastmcp import FastMCP
 
@@ -96,11 +97,31 @@ def _safe_untracked_path(path: str) -> bool:
     return True
 
 
-def _read_small_text(path: Path) -> dict[str, Any]:
+def _read_small_text(root: Path, rel: str) -> dict[str, Any]:
+    path = root / rel
     try:
-        data = path.read_bytes()
+        root_real = root.resolve(strict=True)
+        path.lstat()
     except OSError as exc:
         return {"included": False, "reason": str(exc)}
+
+    if path.is_symlink():
+        return {"included": False, "reason": "symlink not included"}
+
+    try:
+        resolved = path.resolve(strict=True)
+        resolved.relative_to(root_real)
+    except (OSError, ValueError) as exc:
+        return {"included": False, "reason": f"path resolves outside repository: {exc}"}
+
+    if not resolved.is_file():
+        return {"included": False, "reason": "not a regular file"}
+
+    try:
+        data = resolved.read_bytes()
+    except OSError as exc:
+        return {"included": False, "reason": str(exc)}
+
     if len(data) > MAX_UNTRACKED_BYTES:
         return {"included": False, "reason": f"larger than {MAX_UNTRACKED_BYTES} bytes"}
     if b"\x00" in data:
@@ -135,9 +156,45 @@ def _collect_untracked(root: Path) -> list[dict[str, Any]]:
         if not _safe_untracked_path(rel):
             entry.update({"included": False, "reason": "possible secret or private key"})
         else:
-            entry.update(_read_small_text(root / rel))
+            entry.update(_read_small_text(root, rel))
         files.append(entry)
     return files
+
+
+def _merge_command_status(packet: dict[str, Any]) -> dict[str, Any]:
+    command_keys = [key for key in ("view", "diff") if key in packet]
+    failed = [key for key in command_keys if not packet[key].get("ok")]
+    if failed:
+        packet["error"] = "; ".join(
+            f"{key} failed: {packet[key].get('stderr') or packet[key].get('stdout') or 'unknown error'}"
+            for key in failed
+        )
+    return packet
+
+
+def _parse_gitlab_mr_identifier(identifier: str | None) -> tuple[str | None, str | None]:
+    if not identifier:
+        return None, None
+
+    parsed = urlparse(identifier)
+    if not parsed.scheme or not parsed.netloc:
+        return identifier, None
+
+    parts = [unquote(part) for part in parsed.path.split("/") if part]
+    if "-" not in parts:
+        return identifier, None
+
+    marker = parts.index("-")
+    if marker + 2 >= len(parts) or parts[marker + 1] != "merge_requests":
+        return identifier, None
+
+    iid = parts[marker + 2]
+    project_path = "/".join(parts[:marker])
+    if not iid or not project_path:
+        return identifier, None
+
+    repo = f"{parsed.scheme}://{parsed.netloc}/{project_path}"
+    return iid, repo
 
 
 def _collect_uncommitted(root: Path) -> dict[str, Any]:
@@ -202,28 +259,30 @@ def _collect_pr(root: Path, identifier: str | None) -> dict[str, Any]:
         "number,title,baseRefName,headRefName,headRepository,headRepositoryOwner,url,state,isDraft",
     ]
     diff_args = ["gh", "pr", "diff", *([target] if target else [])]
-    return {
+    return _merge_command_status({
         "scope": "pr",
         "repo_root": str(root),
         "identifier": identifier,
         "view": _command_text(_run(view_args, root), 60_000),
         "diff": _command_text(_run(diff_args, root)),
-    }
+    })
 
 
 def _collect_mr(root: Path, identifier: str | None) -> dict[str, Any]:
     if which("glab") is None:
         return {"scope": "mr", "repo_root": str(root), "error": "glab CLI not found"}
-    target = identifier or ""
-    view_args = ["glab", "mr", "view", *([target] if target else [])]
-    diff_args = ["glab", "mr", "diff", *([target] if target else [])]
-    return {
+    target, repo = _parse_gitlab_mr_identifier(identifier)
+    view_args = ["glab", "mr", "view", *([target] if target else []), *(["-R", repo] if repo else [])]
+    diff_args = ["glab", "mr", "diff", *([target] if target else []), *(["-R", repo] if repo else [])]
+    return _merge_command_status({
         "scope": "mr",
         "repo_root": str(root),
         "identifier": identifier,
+        "resolved_identifier": target,
+        "repo": repo,
         "view": _command_text(_run(view_args, root), 60_000),
         "diff": _command_text(_run(diff_args, root)),
-    }
+    })
 
 
 @mcp.tool()

@@ -86,7 +86,7 @@ def install_target(root: Path, target: Path, copy: bool, force: bool) -> None:
             target.unlink()
 
     if copy:
-        ignore = shutil.ignore_patterns(".git", "__pycache__", "*.pyc", ".DS_Store")
+        ignore = shutil.ignore_patterns(".git", "__pycache__", "*.pyc", ".DS_Store", ".venv")
         shutil.copytree(root, target, ignore=ignore)
         print(f"Copied plugin to {target}")
     else:

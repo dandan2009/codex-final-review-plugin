@@ -47,6 +47,8 @@ and files ending in:
 - `.p12`
 - `.pfx`
 
+It also skips untracked symlinks and files that resolve outside the repository root.
+
 ## Code Changes
 
 The MCP tool never changes code. Code changes are made by Codex only after the skill validates a finding and marks it `accepted`.

@@ -143,7 +143,7 @@ final_review_collect(scope, identifier?, cwd?)
 
 支持的 scope：
 
-- `uncommitted`：收集 `git status`、`git diff`、`git diff --cached` 和小型安全的 untracked 文件
+- `uncommitted`：收集 `git status`、`git diff`、`git diff --cached` 和小型安全的 untracked 常规文件
 - `staged`：收集 `git diff --cached`，并报告 unstaged/untracked 污染风险
 - `pr`：收集 `gh pr view` 和 `gh pr diff`
 - `mr`：收集 `glab mr view` 和 `glab mr diff`

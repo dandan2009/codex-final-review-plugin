@@ -56,6 +56,7 @@ The MCP tool is deterministic and good at collecting context:
 - Which git commands to run
 - How to treat staged-only review
 - How to detect contamination
+- How to avoid reading untracked symlinks or paths outside the repository
 - How to call `gh` and `glab`
 
 The skill is procedural and good at controlling the review:
