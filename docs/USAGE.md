@@ -10,7 +10,7 @@ Use `final-review` when a change is ready for final review and you want Codex to
 $final-review
 ```
 
-Reviews all local uncommitted code by default: staged changes, unstaged changes, and small safe untracked source files. It also attempts to use two independent read-only sub-sessions for cross-review when the active Codex runtime allows it.
+Reviews all local uncommitted code by default: staged changes, unstaged changes, and small safe untracked source files. It also uses two independent read-only sub-sessions for cross-review when the active Codex runtime allows it, without asking an extra permission question.
 
 ### Uncommitted Code
 
@@ -82,17 +82,11 @@ $final-review 这个pr 123
 10. Run final full review.
 11. Report fixed, rejected, deferred, and remaining findings.
 
-## Subagent Permission
+## Subagent Behavior
 
-Codex tool rules may require explicit permission before opening subagents. When needed, the workflow asks:
+The default `final-review` invocation is treated as permission to use two independent read-only reviewer sub-sessions. The workflow should not ask an extra permission question before opening them.
 
-```text
-May I open two independent read-only sub-sessions for this final-review?
-```
-
-Answer yes to use independent reviewers. Codex may ask in your current conversation language.
-
-If you answer no, or subagents are not available, Codex runs two local review passes and reports:
+If subagents are not available or are blocked by the active Codex runtime, Codex runs two local review passes and reports:
 
 ```text
 Review independence: local two-pass fallback, no independent subagents used.

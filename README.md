@@ -14,7 +14,7 @@ $final-review mr 123
 $final-review pr 123
 ```
 
-`$final-review` by itself defaults to reviewing all local uncommitted code and attempts two independent read-only sub-sessions for cross-review when Codex allows it.
+`$final-review` by itself defaults to reviewing all local uncommitted code and uses two independent read-only sub-sessions for cross-review when Codex allows it. It does not ask an extra permission question for the default reviewer sub-sessions.
 
 The plugin resolves the requested diff, collects review context, runs the Codex review perspective plus the gstack-review perspective when available, validates findings, fixes true issues, reruns relevant checks, performs impact review, and reports remaining risk.
 
@@ -122,13 +122,7 @@ $final-review pr https://github.com/owner/repo/pull/123
 For Chinese commands, see [简体中文](README.zh-CN.md).
 
 
-If Codex needs explicit permission to open independent reviewer sub-sessions, it will ask:
-
-```text
-May I open two independent read-only sub-sessions for this final-review?
-```
-
-Answer yes to use two independent read-only reviewers. If you decline, or if subagents are unavailable, the workflow falls back to local two-pass review and reports that downgrade.
+By default, `final-review` treats the plugin invocation as permission to use two independent read-only reviewers. If subagents are unavailable or blocked by the active Codex runtime, the workflow falls back to local two-pass review and reports that downgrade.
 
 ## How It Works
 

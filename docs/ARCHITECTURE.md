@@ -29,7 +29,7 @@ It also defines display metadata and default prompts.
 - Diff collection rules
 - Baseline checks
 - Review pass protocol
-- Subagent permission handling
+- Subagent default behavior and fallback reporting
 - Finding schema
 - Ledger state transitions
 - Fix and verification rules

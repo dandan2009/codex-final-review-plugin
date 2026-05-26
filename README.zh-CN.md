@@ -14,7 +14,7 @@ $final-review 这个mr 123
 $final-review 这个pr 123
 ```
 
-单独输入 `$final-review` 时，默认 review 所有本地未提交代码，并在 Codex 允许时默认打开两个独立只读子会话做交叉审查。
+单独输入 `$final-review` 时，默认 review 所有本地未提交代码，并在 Codex 允许时默认打开两个独立只读子会话做交叉审查。默认 reviewer 子会话不再额外询问一次权限。
 
 插件会解析你要 review 的 diff，收集上下文，运行 Codex review 视角以及可用时的 gstack-review 视角，验证 finding 是否真实，修复真实问题，重新运行相关检查，做影响面复查，并输出剩余风险。
 
@@ -128,13 +128,7 @@ $final-review mr 123
 $final-review pr 123
 ```
 
-如果 Codex 需要你明确授权打开独立子会话，它会先问：
-
-```text
-May I open two independent read-only sub-sessions for this final-review?
-```
-
-回答 yes 或“允许”后，会使用两个独立只读 reviewer。如果你拒绝，或当前环境不支持 subagent，流程会降级成本地双 pass review，并在最终报告里说明这个降级。
+默认情况下，`final-review` 会把插件调用本身视为允许使用两个独立只读 reviewer。如果当前 Codex 环境不支持 subagent，或运行时阻止打开子会话，流程会降级成本地双 pass review，并在最终报告里说明这个降级。
 
 ## 工作原理
 

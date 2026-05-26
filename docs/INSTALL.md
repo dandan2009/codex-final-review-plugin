@@ -107,7 +107,7 @@ In a Codex session, try:
 $final-review
 ```
 
-If the plugin is loaded correctly, Codex should use the final-review workflow. If independent subagents need permission, Codex will ask one short permission question before review.
+If the plugin is loaded correctly, Codex should use the final-review workflow. By default, it reviews uncommitted code and uses independent reviewer sub-sessions when the active Codex runtime allows them.
 
 ## Troubleshooting
 

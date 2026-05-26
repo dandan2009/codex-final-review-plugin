@@ -9,15 +9,9 @@ description: Run a final, multi-pass code review workflow for important changes.
 
 Run the user's end-of-development review loop without manual copy-paste between sessions. This skill is a workflow controller: gather the right diff, run the Codex review perspective plus real gstack-review when available, validate every finding, fix only true issues, and finish with an impact review plus final full review.
 
-Default invocation means: review uncommitted code and use two independent read-only sub-sessions for cross-review when the active Codex runtime allows it. Treat `$final-review`, `Final Review`, plugin default prompts, and `未提交的代码` prompts as requesting this default mode.
+Default invocation means: review uncommitted code and use two independent read-only sub-sessions for cross-review when the active Codex runtime allows it. Treat `$final-review`, `Final Review`, plugin default prompts, and `未提交的代码` prompts as the user's explicit request for this default mode.
 
-Do not let this skill text override active tool rules. If the current Codex runtime requires the user to explicitly authorize subagents and the user's request did not already include wording such as `subagent`, `sub-session`, `independent reviewer`, `子会话`, `子 agent`, `独立 reviewer`, `交叉审查`, `默认打开两个独立子会话`, or equivalent, ask one short permission question before review. Ask in the user's language; default to English:
-
-```text
-May I open two independent read-only sub-sessions for this final-review?
-```
-
-If the user grants permission, spawn the two read-only reviewer subagents. If the user declines, cannot answer, or subagents are unavailable, run the same two review perspectives locally and clearly report that independence was degraded.
+Do not ask an extra permission question before opening the two default reviewer sub-sessions. Only avoid sub-sessions when the user explicitly says not to use them, the active Codex runtime/tool rules block them, or subagents are unavailable. In those cases, run the same two review perspectives locally and clearly report that independence was degraded.
 
 ## Scope Routing
 
@@ -107,7 +101,7 @@ Run two review perspectives over the same selected diff/context.
 
 ### Independent Subagents
 
-Use two independent read-only subagents by default when the active tool rules allow it. If authorization is missing but can be requested, ask the one-line permission question from the Overview before starting reviewer passes. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit target repository files.
+Use two independent read-only subagents by default when the active tool rules allow it. The default final-review invocation is already authorization for these reviewer subagents; do not ask a separate permission question. Each reviewer must receive the same diff/context, must not see the other reviewer's output, and must not edit target repository files.
 
 Reviewer A: general Codex code review.
 
