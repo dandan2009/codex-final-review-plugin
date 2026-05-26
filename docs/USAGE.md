@@ -99,7 +99,23 @@ Review independence: local two-pass fallback, no independent subagents used.
 
 For the exact original workflow, install gstack and make sure Codex can see its `review` / `gstack-review` skill. `final-review` treats that as the second reviewer.
 
-If gstack-review is unavailable or blocked by the current Codex environment, the command still runs the second pass with a built-in gstack-style checklist and reports:
+Before using the fallback, the main session should actively load the real gstack-review skill instructions from Codex's active skill list or known local install paths such as:
+
+```text
+~/.codex/skills/gstack-review/SKILL.md
+~/.codex/skills/review/SKILL.md
+~/gstack/.agents/skills/gstack-review/SKILL.md
+```
+
+If those instructions are readable, Reviewer B should be reported as:
+
+```text
+Reviewer B: gstack-review (skill instructions loaded)
+```
+
+This avoids a false fallback when the main session can see gstack-review but the child reviewer would not automatically inherit the same skill list.
+
+If gstack-review is unavailable, unreadable, unsafe, or blocked by the current Codex environment, the command still runs the second pass with a built-in gstack-style checklist and reports:
 
 ```text
 Reviewer B: gstack-style fallback, real gstack-review unavailable/not used.

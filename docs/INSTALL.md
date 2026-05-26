@@ -132,4 +132,10 @@ If MR review fails, check GitLab CLI auth:
 glab auth status
 ```
 
-If the second reviewer falls back instead of using real gstack-review, check that gstack is installed and that Codex lists the gstack `review` skill in the current environment.
+If the second reviewer falls back instead of using real gstack-review, check that gstack is installed, Codex lists the gstack `review` skill in the current environment, and the main session can read one of the installed skill files:
+
+```text
+~/.codex/skills/gstack-review/SKILL.md
+~/.codex/skills/review/SKILL.md
+~/gstack/.agents/skills/gstack-review/SKILL.md
+```

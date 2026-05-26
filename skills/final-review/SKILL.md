@@ -111,7 +111,14 @@ Focus on bugs, regressions, edge cases, test gaps, data-flow problems, API contr
 
 Reviewer B: real gstack-review when available.
 
-Prefer the active gstack `review` / `gstack-review` skill when Codex exposes it and current tool rules allow it. Treat it as the second reviewer from the user's original workflow. gstack may write local state under `~/.gstack`; that is acceptable only when it does not edit the target repository and the active tool rules allow those local side effects.
+Before launching Reviewer B, the main session must actively try to load real gstack-review instructions instead of relying on the child reviewer to discover them. Treat gstack-review as available when any of these is true:
+
+- The active skill list exposes `review` / `gstack-review`.
+- The skill file can be read from a known install path such as `$HOME/.codex/skills/gstack-review/SKILL.md`, `$HOME/.codex/skills/review/SKILL.md`, or `$HOME/gstack/.agents/skills/gstack-review/SKILL.md`.
+
+When gstack-review is available, read the skill instructions needed for review and include them in Reviewer B's prompt/context. Tell Reviewer B to follow those loaded gstack-review instructions for the selected diff. Do this even if the child reviewer would not automatically inherit the active skill list. In that case, report Reviewer B as `gstack-review (skill instructions loaded)`, not as fallback.
+
+Only use the built-in fallback when the main session cannot access real gstack-review instructions, the active runtime/tool rules block using them, or using them would require unsafe target-repository writes. Treat gstack-review as the second reviewer from the user's original workflow. gstack may write local state under `~/.gstack`; that is acceptable only when it does not edit the target repository and the active tool rules allow those local side effects.
 
 If real gstack-review is unavailable, blocked, or unsafe under the current tool rules, run this built-in gstack-style structural checklist instead:
 
@@ -141,6 +148,7 @@ Reviewer B: gstack-review - 2 findings.
 Use the actual source for Reviewer B:
 
 - `gstack-review` when the real gstack reviewer ran.
+- `gstack-review (skill instructions loaded)` when the main session loaded gstack-review instructions and passed them to Reviewer B.
 - `gstack-style fallback` when the built-in checklist ran.
 - `local gstack-style pass` when subagents were unavailable and the second perspective ran locally.
 

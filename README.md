@@ -38,7 +38,7 @@ The plugin resolves the requested diff, collects review context, runs the Codex 
   - GitHub CLI: `gh`
   - GitLab CLI: `glab`
 
-The installer checks whether Codex can already see `gstack-review`. If it is missing, the installer tries to clone `https://github.com/garrytan/gstack.git` into `~/gstack` and run `bash ./setup --host codex`. If automatic gstack install is skipped or fails, `final-review` still runs by using a built-in gstack-style structural review checklist. The final report should state that fallback clearly.
+The installer checks whether Codex can already see `gstack-review`. If it is missing, the installer tries to clone `https://github.com/garrytan/gstack.git` into `~/gstack` and run `bash ./setup --host codex`. At review time, the main session loads the installed gstack-review skill instructions and passes them to Reviewer B before considering any fallback. If automatic gstack install is skipped or fails, `final-review` still runs by using a built-in gstack-style structural review checklist. The final report should state that fallback clearly.
 
 The installer creates a plugin-local `.venv` and installs Python dependencies from `requirements.txt`. To install dependencies manually instead:
 

@@ -38,7 +38,7 @@ It also defines display metadata and default prompts.
 
 The skill is intentionally explicit because the workflow is high stakes: it can change code after validating findings.
 
-For the second review perspective, the skill prefers real gstack-review when the current Codex environment exposes the gstack `review` / `gstack-review` skill. If it is unavailable or blocked, the workflow uses a built-in gstack-style structural checklist and reports the downgrade.
+For the second review perspective, the skill prefers real gstack-review when the current Codex environment exposes the gstack `review` / `gstack-review` skill or when the main session can read the installed gstack-review `SKILL.md` from disk. The main session loads those instructions and passes them to Reviewer B before considering any fallback. If the real instructions are unavailable, unreadable, unsafe, or blocked, the workflow uses a built-in gstack-style structural checklist and reports the downgrade.
 
 ## MCP Layer
 

@@ -38,7 +38,7 @@ $final-review 这个pr 123
   - GitHub CLI：`gh`
   - GitLab CLI：`glab`
 
-安装脚本会检查 Codex 是否已经能发现 `gstack-review`。如果没有，会尝试把 `https://github.com/garrytan/gstack.git` clone 到 `~/gstack`，并运行 `bash ./setup --host codex`。如果跳过或自动安装失败，`final-review` 仍然可以运行，但会降级使用内置的 gstack-style 结构化 review 清单，并在最终报告里明确说明这个降级。
+安装脚本会检查 Codex 是否已经能发现 `gstack-review`。如果没有，会尝试把 `https://github.com/garrytan/gstack.git` clone 到 `~/gstack`，并运行 `bash ./setup --host codex`。实际 review 时，主会话会先加载已安装的 gstack-review skill 指令，并把它传给 Reviewer B；只有加载不到或被当前运行环境阻止时才降级。如果跳过或自动安装失败，`final-review` 仍然可以运行，但会降级使用内置的 gstack-style 结构化 review 清单，并在最终报告里明确说明这个降级。
 
 安装脚本会创建插件本地 `.venv`，并从 `requirements.txt` 安装 Python 依赖。如果想手动安装依赖，可以运行：
 
