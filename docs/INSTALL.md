@@ -17,7 +17,7 @@ Run:
 python3 install.py
 ```
 
-The installer creates `~/plugins/final-review`, creates a plugin-local `.venv`, installs `requirements.txt`, and updates `~/.agents/plugins/marketplace.json`.
+The installer creates `~/plugins/final-review`, creates a plugin-local `.venv`, installs `requirements.txt`, updates `~/.agents/plugins/marketplace.json`, registers the personal marketplace in `~/.codex/config.toml`, and enables `final-review@personal`.
 
 It also checks whether Codex can see gstack's `review` / `gstack-review` skill. If not, it tries to install gstack for Codex automatically:
 
@@ -91,6 +91,12 @@ Install to a custom marketplace path:
 
 ```bash
 python3 install.py --marketplace ~/.agents/plugins/marketplace.json
+```
+
+Install to a custom Codex config path:
+
+```bash
+python3 install.py --codex-config ~/.codex/config.toml
 ```
 
 ## Verify

@@ -75,6 +75,7 @@ The installer:
 - Creates `~/plugins/final-review` as a symlink to this checkout
 - Creates `~/plugins/final-review/.venv` and installs Python dependencies
 - Creates or updates `~/.agents/plugins/marketplace.json`
+- Registers the personal marketplace and enables `final-review@personal` in `~/.codex/config.toml`
 - Adds the plugin entry required by Codex
 - Checks for `gstack-review` and installs gstack for Codex when it is missing
 - Leaves your repository checkout as the source of truth for updates

@@ -32,6 +32,29 @@ class InstallGstackTest(unittest.TestCase):
 
             self.assertTrue(install.has_gstack_review(Path(tmp)))
 
+    def test_upserts_codex_config(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Path(tmp) / ".codex" / "config.toml"
+            root = Path(tmp) / "marketplace-root"
+            install.upsert_codex_config(config, root)
+
+            text = config.read_text(encoding="utf-8")
+            self.assertIn("[marketplaces.personal]", text)
+            self.assertIn(f'source = "{root}"', text)
+            self.assertIn('[plugins."final-review@personal"]', text)
+            self.assertIn("enabled = true", text)
+
+    def test_upserts_codex_config_without_duplicate_tables(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            config = Path(tmp) / ".codex" / "config.toml"
+            root = Path(tmp) / "marketplace-root"
+            install.upsert_codex_config(config, root)
+            install.upsert_codex_config(config, root)
+
+            text = config.read_text(encoding="utf-8")
+            self.assertEqual(text.count("[marketplaces.personal]"), 1)
+            self.assertEqual(text.count('[plugins."final-review@personal"]'), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

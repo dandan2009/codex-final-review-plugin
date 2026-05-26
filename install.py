@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -35,6 +37,11 @@ def parse_args() -> argparse.Namespace:
         "--marketplace",
         default=str(Path.home() / ".agents" / "plugins" / "marketplace.json"),
         help="Path to the personal marketplace.json file.",
+    )
+    parser.add_argument(
+        "--codex-config",
+        default=str(Path.home() / ".codex" / "config.toml"),
+        help="Path to Codex config.toml. Defaults to ~/.codex/config.toml.",
     )
     parser.add_argument(
         "--target",
@@ -147,6 +154,45 @@ def upsert_marketplace(path: Path) -> None:
         handle.write("\n")
 
     print(f"Updated marketplace: {path}")
+
+
+def toml_basic_string(value: str) -> str:
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def replace_toml_table(text: str, table: str, block: str) -> str:
+    pattern = re.compile(rf"(?ms)^\[{re.escape(table)}\]\n.*?(?=^\[|\Z)")
+    if pattern.search(text):
+        return pattern.sub(block.rstrip() + "\n\n", text)
+
+    separator = "" if not text or text.endswith("\n") else "\n"
+    return text + separator + "\n" + block.rstrip() + "\n"
+
+
+def upsert_codex_config(path: Path, marketplace_root: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+    marketplace_block = "\n".join(
+        [
+            "[marketplaces.personal]",
+            f"last_updated = {toml_basic_string(timestamp)}",
+            'source_type = "local"',
+            f"source = {toml_basic_string(str(marketplace_root))}",
+        ]
+    )
+    plugin_block = "\n".join(
+        [
+            f'[plugins."{PLUGIN_NAME}@personal"]',
+            "enabled = true",
+        ]
+    )
+
+    text = replace_toml_table(text, "marketplaces.personal", marketplace_block)
+    text = replace_toml_table(text, f'plugins."{PLUGIN_NAME}@personal"', plugin_block)
+    path.write_text(text, encoding="utf-8")
+    print(f"Updated Codex config: {path}")
 
 
 def check_mcp_dependency() -> None:
@@ -324,6 +370,7 @@ def main() -> None:
     root = Path(__file__).resolve().parent
     target = Path(args.target).expanduser().resolve()
     marketplace = Path(args.marketplace).expanduser().resolve()
+    codex_config = Path(args.codex_config).expanduser().resolve()
     gstack_dir = Path(args.gstack_dir).expanduser().resolve()
 
     ensure_plugin_root(root)
@@ -331,6 +378,7 @@ def main() -> None:
     if not args.no_deps:
         install_dependencies(target, args.python)
     upsert_marketplace(marketplace)
+    upsert_codex_config(codex_config, marketplace.parents[2])
     ensure_gstack_review(args.no_gstack, gstack_dir)
     if args.no_deps:
         check_mcp_dependency()

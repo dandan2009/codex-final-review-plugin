@@ -75,6 +75,7 @@ python3 install.py
 - 创建 `~/plugins/final-review`，默认指向当前 checkout 的 symlink
 - 创建 `~/plugins/final-review/.venv` 并安装 Python 依赖
 - 创建或更新 `~/.agents/plugins/marketplace.json`
+- 在 `~/.codex/config.toml` 注册 personal marketplace，并启用 `final-review@personal`
 - 添加 Codex 识别插件所需的 marketplace entry
 - 检查 `gstack-review`，如果缺失则为 Codex 自动安装 gstack
 - 保留当前仓库 checkout 作为后续更新源
